@@ -177,6 +177,9 @@ local autoThread = nil
 local randomGenerator = Random.new(math.floor(os.clock() * 1000000) + math.floor(os.time()) + #tostring(LocalPlayer.UserId) * 7919)
 local maxServerPages = 5
 local targetCandidateCount = 30
+local failedServers = {}
+local failedServerCooldown = 60
+local teleportRetries = 2
 
 -- Current server player count
 task.spawn(function()
@@ -200,6 +203,8 @@ local function findLowPlayerServer(threshold)
     local currentId = tostring(game.JobId)
     local cursor = nil
     local candidates = {}
+    local seenServers = {}
+    local now = os.time()
 
     for page = 1, maxServerPages do
         local url =
@@ -247,14 +252,24 @@ local function findLowPlayerServer(threshold)
                 local serverId = type(server.id) == "string" and server.id or ""
                 local playing = tonumber(server.playing)
 
+                local maxPlayers = tonumber(server.maxPlayers)
+                local hasCapacity = not maxPlayers or playing < maxPlayers
+                local recentlyFailed = failedServers[serverId]
+                    and now - failedServers[serverId] < failedServerCooldown
+
                 if serverId ~= ""
+                    and not seenServers[serverId]
                     and serverId ~= currentId
+                    and not recentlyFailed
                     and playing
                     and playing >= 0
-                    and playing <= threshold then
+                    and playing <= threshold
+                    and hasCapacity then
+                    seenServers[serverId] = true
                     table.insert(candidates, {
                         id = serverId,
-                        playing = playing
+                        playing = playing,
+                        maxPlayers = maxPlayers
                     })
                 end
             end
@@ -314,49 +329,46 @@ local function joinOnce()
     StatusLabel.TextColor3 =
         Color3.fromRGB(255, 180, 50)
 
-    local server, result = findLowPlayerServer(threshold)
+    for attempt = 1, teleportRetries + 1 do
+        local server, result = findLowPlayerServer(threshold)
 
-    if not server then
-        StatusLabel.Text = result == "request_failed" or result == "invalid_response"
-            and "Server API request failed."
-            or "No suitable server found."
+        if not server then
+            StatusLabel.Text = result == "request_failed" or result == "invalid_response"
+                and "Server API request failed."
+                or "No suitable server found."
+            StatusLabel.TextColor3 = Color3.fromRGB(255, 80, 80)
+            return false
+        end
 
-        StatusLabel.TextColor3 =
-            Color3.fromRGB(255, 80, 80)
+        StatusLabel.Text = "Found " .. result .. " candidates"
+        StatusLabel.TextColor3 = Color3.fromRGB(0, 230, 255)
+        task.wait(0.1)
+        StatusLabel.Text = "Selected: " .. server.playing .. " players"
+        task.wait(0.1)
+        StatusLabel.Text = "Teleporting..."
 
-        return false
+        local ok = pcall(function()
+            TeleportService:TeleportToPlaceInstance(
+                PlaceId,
+                server.id,
+                LocalPlayer
+            )
+        end)
+
+        if ok then
+            return true
+        end
+
+        failedServers[server.id] = os.time()
+        if attempt <= teleportRetries then
+            StatusLabel.Text = "Server unavailable. Retrying..."
+            task.wait(0.5)
+        end
     end
 
-    StatusLabel.Text = "Found " .. result .. " candidates"
-    StatusLabel.TextColor3 = Color3.fromRGB(0, 230, 255)
-    task.wait(0.25)
-
-    StatusLabel.Text = "Selecting server..."
-    task.wait(0.25)
-    StatusLabel.Text = "Selected: " .. server.playing .. " players"
-    StatusLabel.TextColor3 = Color3.fromRGB(0, 230, 255)
-    task.wait(0.25)
-    StatusLabel.Text = "Teleporting..."
-
-    local ok = pcall(function()
-        TeleportService:TeleportToPlaceInstance(
-            PlaceId,
-            server.id,
-            LocalPlayer
-        )
-    end)
-
-    if not ok then
-        StatusLabel.Text =
-            "Teleport failed."
-
-        StatusLabel.TextColor3 =
-            Color3.fromRGB(255, 80, 80)
-
-        return false
-    end
-
-    return true
+    StatusLabel.Text = "Teleport failed."
+    StatusLabel.TextColor3 = Color3.fromRGB(255, 80, 80)
+    return false
 end
 
 -- Manual hop
