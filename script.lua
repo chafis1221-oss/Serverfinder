@@ -6,9 +6,9 @@ local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local PlaceId = game.PlaceId
 
--- GUI Creation
+-- GUI Creation with Stealth Protection
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "PrivateServerFinder"
+ScreenGui.Name = "StealthHopperCore"
 ScreenGui.ResetOnSpawn = false
 
 if syn and syn.protect_gui then
@@ -23,7 +23,7 @@ end
 -- Main Window
 local MainFrame = Instance.new("Frame")
 MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(15, 12, 25)
+MainFrame.BackgroundColor3 = Color3.fromRGB(12, 10, 20)
 MainFrame.BorderSizePixel = 0
 MainFrame.Position = UDim2.new(0.5, -130, 0.5, -160)
 MainFrame.Size = UDim2.new(0, 260, 0, 320)
@@ -33,7 +33,7 @@ MainFrame.ClipsDescendants = true
 Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 12)
 
 local UIStroke = Instance.new("UIStroke", MainFrame)
-UIStroke.Color = Color3.fromRGB(60, 50, 90)
+UIStroke.Color = Color3.fromRGB(0, 220, 150)
 UIStroke.Thickness = 1.5
 
 -- Header
@@ -42,8 +42,8 @@ Title.Position = UDim2.new(0, 15, 0, 12)
 Title.Size = UDim2.new(0, 180, 0, 18)
 Title.BackgroundTransparency = 1
 Title.Font = Enum.Font.FredokaOne
-Title.Text = "PRIVATE SERVER FINDER"
-Title.TextColor3 = Color3.fromRGB(0, 230, 255)
+Title.Text = "STEALTH HOPPER v3.0"
+Title.TextColor3 = Color3.fromRGB(0, 220, 150)
 Title.TextSize = 13
 Title.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -52,8 +52,8 @@ Subtitle.Position = UDim2.new(0, 15, 0, 30)
 Subtitle.Size = UDim2.new(0, 180, 0, 14)
 Subtitle.BackgroundTransparency = 1
 Subtitle.Font = Enum.Font.GothamMedium
-Subtitle.Text = "Low Player Server Finder"
-Subtitle.TextColor3 = Color3.fromRGB(120, 120, 150)
+Subtitle.Text = "Anti-RateLimit & Safe Delay"
+Subtitle.TextColor3 = Color3.fromRGB(130, 130, 160)
 Subtitle.TextSize = 10
 Subtitle.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -76,7 +76,7 @@ end)
 local StatusCard = Instance.new("Frame", MainFrame)
 StatusCard.Position = UDim2.new(0, 15, 0, 52)
 StatusCard.Size = UDim2.new(1, -30, 0, 50)
-StatusCard.BackgroundColor3 = Color3.fromRGB(24, 20, 40)
+StatusCard.BackgroundColor3 = Color3.fromRGB(20, 16, 32)
 StatusCard.BorderSizePixel = 0
 Instance.new("UICorner", StatusCard).CornerRadius = UDim.new(0, 8)
 
@@ -86,7 +86,7 @@ NowLabel.Size = UDim2.new(1, -20, 0, 18)
 NowLabel.BackgroundTransparency = 1
 NowLabel.Font = Enum.Font.GothamBold
 NowLabel.TextXAlignment = Enum.TextXAlignment.Left
-NowLabel.TextColor3 = Color3.fromRGB(0, 230, 255)
+NowLabel.TextColor3 = Color3.fromRGB(0, 220, 150)
 NowLabel.TextSize = 12
 
 local StatusLabel = Instance.new("TextLabel", StatusCard)
@@ -95,7 +95,7 @@ StatusLabel.Size = UDim2.new(1, -20, 0, 22)
 StatusLabel.BackgroundTransparency = 1
 StatusLabel.Font = Enum.Font.GothamMedium
 StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
-StatusLabel.TextColor3 = Color3.fromRGB(160, 160, 180)
+StatusLabel.TextColor3 = Color3.fromRGB(170, 170, 190)
 StatusLabel.TextSize = 10
 StatusLabel.TextWrapped = true
 
@@ -103,11 +103,11 @@ StatusLabel.TextWrapped = true
 local MaxBox = Instance.new("TextBox", MainFrame)
 MaxBox.Position = UDim2.new(0, 15, 0, 110)
 MaxBox.Size = UDim2.new(1, -30, 0, 32)
-MaxBox.BackgroundColor3 = Color3.fromRGB(24, 20, 40)
+MaxBox.BackgroundColor3 = Color3.fromRGB(20, 16, 32)
 MaxBox.BorderSizePixel = 0
 MaxBox.Font = Enum.Font.GothamBold
 MaxBox.Text = "1"
-MaxBox.PlaceholderText = "Max Players Allowed"
+MaxBox.PlaceholderText = "Target Max Players (0-1)"
 MaxBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 MaxBox.TextSize = 13
 MaxBox.ClearTextOnFocus = false
@@ -117,7 +117,7 @@ Instance.new("UICorner", MaxBox).CornerRadius = UDim.new(0, 8)
 local ServerIdBox = Instance.new("TextBox", MainFrame)
 ServerIdBox.Position = UDim2.new(0, 15, 0, 150)
 ServerIdBox.Size = UDim2.new(1, -30, 0, 32)
-ServerIdBox.BackgroundColor3 = Color3.fromRGB(24, 20, 40)
+ServerIdBox.BackgroundColor3 = Color3.fromRGB(20, 16, 32)
 ServerIdBox.BorderSizePixel = 0
 ServerIdBox.Font = Enum.Font.GothamMedium
 ServerIdBox.Text = ""
@@ -128,14 +128,14 @@ ServerIdBox.TextSize = 11
 ServerIdBox.ClearTextOnFocus = false
 Instance.new("UICorner", ServerIdBox).CornerRadius = UDim.new(0, 8)
 
--- Low Server Button
+-- Safe Jump Button
 local JoinBtn = Instance.new("TextButton", MainFrame)
 JoinBtn.Position = UDim2.new(0, 15, 0, 190)
 JoinBtn.Size = UDim2.new(1, -30, 0, 34)
-JoinBtn.BackgroundColor3 = Color3.fromRGB(0, 140, 255)
+JoinBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 120)
 JoinBtn.BorderSizePixel = 0
 JoinBtn.Font = Enum.Font.GothamBold
-JoinBtn.Text = "FIND LOW SERVER"
+JoinBtn.Text = "STEALTH JUMP"
 JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 JoinBtn.TextSize = 11
 Instance.new("UICorner", JoinBtn).CornerRadius = UDim.new(0, 8)
@@ -152,457 +152,209 @@ HopIdBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 HopIdBtn.TextSize = 11
 Instance.new("UICorner", HopIdBtn).CornerRadius = UDim.new(0, 8)
 
--- Auto Button
+-- Auto Stealth Loop Button
 local AutoBtn = Instance.new("TextButton", MainFrame)
 AutoBtn.Position = UDim2.new(0, 15, 0, 270)
 AutoBtn.Size = UDim2.new(1, -30, 0, 34)
 AutoBtn.BackgroundColor3 = Color3.fromRGB(35, 30, 50)
 AutoBtn.BorderSizePixel = 0
 AutoBtn.Font = Enum.Font.GothamBold
-AutoBtn.Text = "AUTO HOP: DISABLED"
+AutoBtn.Text = "AUTO STEALTH: OFF"
 AutoBtn.TextColor3 = Color3.fromRGB(180, 180, 200)
 AutoBtn.TextSize = 11
 Instance.new("UICorner", AutoBtn).CornerRadius = UDim.new(0, 8)
 
--- Hover
 local function addHover(btn, normalColor, hoverColor)
     btn.MouseEnter:Connect(function()
-        TweenService:Create(
-            btn,
-            TweenInfo.new(0.2),
-            {BackgroundColor3 = hoverColor}
-        ):Play()
+        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = hoverColor}):Play()
     end)
-
     btn.MouseLeave:Connect(function()
-        TweenService:Create(
-            btn,
-            TweenInfo.new(0.2),
-            {BackgroundColor3 = normalColor}
-        ):Play()
+        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = normalColor}):Play()
     end)
 end
 
-addHover(
-    JoinBtn,
-    Color3.fromRGB(0, 140, 255),
-    Color3.fromRGB(30, 160, 255)
-)
-
-addHover(
-    HopIdBtn,
-    Color3.fromRGB(120, 80, 220),
-    Color3.fromRGB(145, 105, 245)
-)
-
-addHover(
-    CloseBtn,
-    Color3.fromRGB(35, 30, 50),
-    Color3.fromRGB(220, 50, 70)
-)
+addHover(JoinBtn, Color3.fromRGB(0, 180, 120), Color3.fromRGB(0, 210, 140))
+addHover(HopIdBtn, Color3.fromRGB(120, 80, 220), Color3.fromRGB(145, 105, 245))
+addHover(CloseBtn, Color3.fromRGB(35, 30, 50), Color3.fromRGB(220, 50, 70))
 
 -- ==============================
--- LOGIC
+-- STEALTH LOGIC CORE
 -- ==============================
 
 local autoEnabled = false
 local autoThread = nil
+local rng = Random.new(tick())
 
-local randomGenerator = Random.new(
-    math.floor(os.clock() * 1000000)
-    + math.floor(os.time())
-    + #tostring(LocalPlayer.UserId) * 7919
-)
-
-local maxServerPages = 5
-local targetCandidateCount = 30
-local failedServers = {}
-local failedServerCooldown = 60
-local teleportRetries = 2
-
--- Current server player count
 task.spawn(function()
     while ScreenGui.Parent do
         local count = #Players:GetPlayers()
-        NowLabel.Text = "Current Server: " .. count .. " player(s)"
+        NowLabel.Text = "Stealth Mode | Players: " .. count
         task.wait(1)
     end
 end)
 
--- Get threshold
 local function getThreshold()
-    return math.max(
-        1,
-        math.floor(tonumber(MaxBox.Text) or 1)
-    )
+    return math.max(0, math.floor(tonumber(MaxBox.Text) or 1))
 end
 
--- Find and weighted-randomly select a server
-local function findLowPlayerServer(threshold)
+-- Safe API request with randomized jitter to prevent rate limits
+local function safeFetchServers(threshold)
     local currentId = tostring(game.JobId)
     local cursor = nil
     local candidates = {}
-    local seenServers = {}
-    local now = os.time()
 
-    for page = 1, maxServerPages do
-        local url =
-            "https://games.roblox.com/v1/games/"
-            .. PlaceId
-            .. "/servers/Public?sortOrder=Asc&limit=100"
-
+    for page = 1, 5 do
+        local url = "https://games.roblox.com/v1/games/" .. PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
         if cursor then
             url = url .. "&cursor=" .. HttpService:UrlEncode(cursor)
         end
 
-        local ok, raw = pcall(function()
+        local success, raw = pcall(function()
             return game:HttpGet(url)
         end)
 
-        if not ok or type(raw) ~= "string" or raw == "" then
-            ok, raw = pcall(function()
-                local response = HttpService:RequestAsync({
-                    Url = url,
-                    Method = "GET"
-                })
-
-                if not response.Success
-                    or type(response.Body) ~= "string" then
-                    error("Server API request failed")
-                end
-
-                return response.Body
+        if not success or not raw then
+            success, raw = pcall(function()
+                local res = HttpService:RequestAsync({Url = url, Method = "GET"})
+                return res.Body
             end)
         end
 
-        if not ok or type(raw) ~= "string" or raw == "" then
-            return nil, "request_failed"
-        end
+        if success and raw then
+            local decoded, data = pcall(function()
+                return HttpService:JSONDecode(raw)
+            end)
 
-        local ok2, data = pcall(function()
-            return HttpService:JSONDecode(raw)
-        end)
-
-        if not ok2
-            or type(data) ~= "table"
-            or type(data.data) ~= "table" then
-            return nil, "invalid_response"
-        end
-
-        for _, server in ipairs(data.data) do
-            if type(server) == "table" then
-                local serverId =
-                    type(server.id) == "string"
-                    and server.id
-                    or ""
-
-                local playing = tonumber(server.playing)
-                local maxPlayers = tonumber(server.maxPlayers)
-
-                local hasCapacity =
-                    not maxPlayers
-                    or playing < maxPlayers
-
-                local recentlyFailed =
-                    failedServers[serverId]
-                    and now - failedServers[serverId]
-                        < failedServerCooldown
-
-                if serverId ~= ""
-                    and not seenServers[serverId]
-                    and serverId ~= currentId
-                    and not recentlyFailed
-                    and playing
-                    and playing >= 0
-                    and playing <= threshold
-                    and hasCapacity then
-
-                    seenServers[serverId] = true
-
-                    table.insert(candidates, {
-                        id = serverId,
-                        playing = playing,
-                        maxPlayers = maxPlayers
-                    })
+            if decoded and data and data.data then
+                for _, server in ipairs(data.data) do
+                    if server.id and server.id ~= currentId then
+                        local playing = tonumber(server.playing) or 99
+                        if playing <= threshold and playing >= 0 then
+                            table.insert(candidates, {id = server.id, playing = playing})
+                        end
+                    end
                 end
+                cursor = data.nextPageCursor
+                if not cursor then break end
+            else
+                break
             end
-        end
-
-        cursor = data.nextPageCursor
-
-        if not cursor
-            or #candidates >= targetCandidateCount then
+        else
             break
         end
+        -- Jitter delay to avoid Roblox API throttling / rate limiting
+        task.wait(rng:NextNumber(0.2, 0.5))
     end
 
-    if #candidates == 0 then
-        return nil, "no_candidates"
-    end
-
-    -- Weighted random:
-    -- lower player count = higher chance
-    local totalWeight = 0
-
-    for _, candidate in ipairs(candidates) do
-        local weight =
-            math.max(
-                1,
-                threshold - candidate.playing + 1
-            )
-
-        candidate.weight = weight * weight
-        totalWeight = totalWeight + candidate.weight
-    end
-
-    local roll =
-        randomGenerator:NextNumber(
-            0,
-            totalWeight
-        )
-
-    local accumulated = 0
-
-    for _, candidate in ipairs(candidates) do
-        accumulated =
-            accumulated + candidate.weight
-
-        if roll <= accumulated then
-            return candidate, #candidates
-        end
-    end
-
-    return candidates[#candidates], #candidates
+    return candidates
 end
 
--- Join one low-player server
-local function joinOnce()
+local function executeStealthHop()
     local threshold = getThreshold()
     local currentCount = #Players:GetPlayers()
 
-    if currentCount <= threshold then
-        StatusLabel.Text =
-            "Already optimal (" ..
-            currentCount ..
-            " <= " ..
-            threshold ..
-            ")"
-
-        StatusLabel.TextColor3 =
-            Color3.fromRGB(0, 230, 150)
-
+    if currentCount < 4 and currentCount <= threshold then
+        StatusLabel.Text = "Server secure (" .. currentCount .. " players)."
+        StatusLabel.TextColor3 = Color3.fromRGB(0, 220, 150)
         return false
     end
 
-    StatusLabel.Text = "Searching servers..."
-    StatusLabel.TextColor3 =
-        Color3.fromRGB(255, 180, 50)
+    StatusLabel.Text = "Scanning safely (Anti-RateLimit)..."
+    StatusLabel.TextColor3 = Color3.fromRGB(255, 180, 50)
 
-    for attempt = 1, teleportRetries + 1 do
+    local candidates = safeFetchServers(threshold)
 
-        local server, result =
-            findLowPlayerServer(threshold)
-
-        if not server then
-            local message
-
-            if result == "request_failed"
-                or result == "invalid_response" then
-
-                message = "Server API request failed."
-            else
-                message = "No suitable server found."
-            end
-
-            StatusLabel.Text = message
-            StatusLabel.TextColor3 =
-                Color3.fromRGB(255, 80, 80)
-
-            return false
-        end
-
-        StatusLabel.Text =
-            "Found " .. result .. " candidates"
-
-        StatusLabel.TextColor3 =
-            Color3.fromRGB(0, 230, 255)
-
-        task.wait(0.1)
-
-        StatusLabel.Text =
-            "Selected: "
-            .. server.playing
-            .. " players"
-
-        task.wait(0.1)
-
-        StatusLabel.Text = "Teleporting..."
-
-        local ok = pcall(function()
-            TeleportService:TeleportToPlaceInstance(
-                PlaceId,
-                server.id,
-                LocalPlayer
-            )
+    if #candidates > 0 then
+        table.sort(candidates, function(a, b)
+            return a.playing < b.playing
         end)
 
-        if ok then
+        local target = candidates[1]
+        StatusLabel.Text = "Target secure: [P:" .. target.playing .. "]. Teleporting..."
+        StatusLabel.TextColor3 = Color3.fromRGB(0, 220, 150)
+
+        -- Randomized safety pause before teleporting to look natural
+        task.wait(rng:NextNumber(0.5, 1.2))
+
+        local success = pcall(function()
+            TeleportService:TeleportToPlaceInstance(PlaceId, target.id, LocalPlayer)
+        end)
+
+        if success then
             return true
-        end
-
-        failedServers[server.id] = os.time()
-
-        if attempt <= teleportRetries then
-            StatusLabel.Text =
-                "Server unavailable. Retrying..."
-
-            task.wait(0.5)
         end
     end
 
-    StatusLabel.Text = "Teleport failed."
-    StatusLabel.TextColor3 =
-        Color3.fromRGB(255, 80, 80)
-
+    StatusLabel.Text = "No target yet, retrying..."
+    StatusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
     return false
 end
 
--- Manual low-player hop
+-- Button Triggers
 JoinBtn.MouseButton1Click:Connect(function()
     JoinBtn.Active = false
-
-    joinOnce()
-
-    task.wait(2)
-
+    executeStealthHop()
+    task.wait(1.5)
     JoinBtn.Active = true
 end)
 
--- =================================
--- HOP TO SERVER ID
--- =================================
-
 HopIdBtn.MouseButton1Click:Connect(function()
-
-    local serverId =
-        ServerIdBox.Text:gsub("%s+", "")
-
-    if serverId == "" then
-        StatusLabel.Text =
-            "Enter a Server ID first."
-
-        StatusLabel.TextColor3 =
-            Color3.fromRGB(255, 180, 50)
-
-        return
-    end
-
-    if serverId == tostring(game.JobId) then
-        StatusLabel.Text =
-            "Already in this server."
-
-        StatusLabel.TextColor3 =
-            Color3.fromRGB(255, 180, 50)
-
-        return
-    end
-
-    HopIdBtn.Active = false
-
-    StatusLabel.Text =
-        "Joining Server ID..."
-
-    StatusLabel.TextColor3 =
-        Color3.fromRGB(0, 230, 255)
-
-    local ok = pcall(function()
-        TeleportService:TeleportToPlaceInstance(
-            PlaceId,
-            serverId,
-            LocalPlayer
-        )
-    end)
-
-    if not ok then
-        StatusLabel.Text =
-            "Failed to join Server ID."
-
-        StatusLabel.TextColor3 =
-            Color3.fromRGB(255, 80, 80)
-
+    local serverId = ServerIdBox.Text:gsub("%s+", "")
+    if serverId ~= "" and serverId ~= tostring(game.JobId) then
+        HopIdBtn.Active = false
+        StatusLabel.Text = "Injecting Job ID..."
+        pcall(function()
+            TeleportService:TeleportToPlaceInstance(PlaceId, serverId, LocalPlayer)
+        end)
+        task.wait(2)
         HopIdBtn.Active = true
     end
 end)
 
--- Auto hop
 AutoBtn.MouseButton1Click:Connect(function()
-
     autoEnabled = not autoEnabled
 
     if autoEnabled then
-
-        AutoBtn.Text =
-            "AUTO HOP: ENABLED"
-
-        AutoBtn.BackgroundColor3 =
-            Color3.fromRGB(0, 180, 120)
-
-        AutoBtn.TextColor3 =
-            Color3.fromRGB(255, 255, 255)
+        AutoBtn.Text = "AUTO STEALTH: ON"
+        AutoBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 120)
+        AutoBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
         autoThread = task.spawn(function()
+            while autoEnabled and ScreenGui.Parent do
+                local count = #Players:GetPlayers()
+                local threshold = getThreshold()
 
-            while autoEnabled
-                and ScreenGui.Parent do
-
-                local threshold =
-                    getThreshold()
-
-                local count =
-                    #Players:GetPlayers()
-
-                if count <= threshold then
-
-                    StatusLabel.Text =
-                        "Optimal server. Waiting..."
-
-                    StatusLabel.TextColor3 =
-                        Color3.fromRGB(0, 230, 150)
-
-                    task.wait(5)
-
+                if count >= 4 or count > threshold then
+                    executeStealthHop()
+                    -- Safe randomized interval loop to bypass spam detection
+                    task.wait(rng:NextNumber(4, 7))
                 else
-
-                    joinOnce()
-
-                    task.wait(7)
+                    StatusLabel.Text = "Monitoring stealth loop..."
+                    StatusLabel.TextColor3 = Color3.fromRGB(0, 220, 150)
+                    task.wait(3)
                 end
             end
         end)
-
     else
-
-        AutoBtn.Text =
-            "AUTO HOP: DISABLED"
-
-        AutoBtn.BackgroundColor3 =
-            Color3.fromRGB(35, 30, 50)
-
-        AutoBtn.TextColor3 =
-            Color3.fromRGB(180, 180, 200)
+        AutoBtn.Text = "AUTO STEALTH: OFF"
+        AutoBtn.BackgroundColor3 = Color3.fromRGB(35, 30, 50)
+        AutoBtn.TextColor3 = Color3.fromRGB(180, 180, 200)
 
         if autoThread then
             task.cancel(autoThread)
             autoThread = nil
         end
-
-        StatusLabel.Text =
-            "Auto hop stopped."
-
-        StatusLabel.TextColor3 =
-            Color3.fromRGB(160, 160, 180)
+        StatusLabel.Text = "Stealth loop paused."
+        StatusLabel.TextColor3 = Color3.fromRGB(170, 170, 190)
     end
 end)
 
-StatusLabel.Text =
-    "Set max threshold & click Find."
+-- Initial Check
+task.spawn(function()
+    task.wait(1)
+    if #Players:GetPlayers() >= 4 then
+        StatusLabel.Text = "High players detected. Initializing stealth hop..."
+        executeStealthHop()
+    end
+end)
+
