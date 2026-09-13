@@ -1,3 +1,4 @@
+
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
@@ -201,7 +202,6 @@ local function aggressiveFetch(threshold)
     local cursor = nil
     local candidates = {}
 
-    -- Tarik sampai 10 halaman sekaligus secara instan buat game gede
     for page = 1, 10 do
         local url = "https://games.roblox.com/v1/games/" .. PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
         if cursor then
@@ -258,8 +258,7 @@ local function executeSnipe()
 
     local candidates = aggressiveFetch(threshold)
 
-    if #candidates > 0 --[[matched]] then
-        -- Urutkan dari yang pemainnya paling sedikit (0 atau 1)
+    if #candidates > 0 then
         table.sort(candidates, function(a, b)
             return a.playing < b.playing
         end)
@@ -318,7 +317,6 @@ AutoBtn.MouseButton1Click:Connect(function()
 
                 if count > threshold then
                     executeSnipe()
-                    -- Jeda super singkat (1 detik) biar gas terus tanpa kena limit sadis
                     task.wait(1)
                 else
                     StatusLabel.Text = "Target reached. Standing by."
